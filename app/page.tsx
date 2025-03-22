@@ -1,5 +1,6 @@
-import { Suspense, lazy } from 'react';
-import { Navbar } from "@/components/ui/navbar";
+"use client"
+
+import { Suspense } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,53 +11,73 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import Loading from './loading';
+import { motion } from "framer-motion";
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: "easeOut" }
+};
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      <Navbar />
-      <section className="flex min-h-[calc(100vh-4rem)] w-full items-center justify-center px-4 md:px-6 lg:px-8">
-        <div className="container max-w-7xl mx-auto py-12 md:py-16 lg:py-24">
-          <div className="flex flex-col items-center justify-center gap-8 md:gap-12">
-            <div className="flex flex-col items-center gap-6 text-center px-4">
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl lg:text-6xl">
-                The Student Voice
-              </h1>
-              <p className="max-w-[42rem] text-muted-foreground sm:text-xl leading-relaxed">
-                Your college journey is unique and transformative. We're here to help you navigate academic challenges,
-                manage stress, and build meaningful connections while pursuing your educational goals.
-              </p>
-              <div className="flex flex-wrap gap-4 justify-center">
-                <Button size="lg" className="min-w-[140px]" asChild>
-                  <Link href="/resources">Get Started</Link>
-                </Button>
-                <Button size="lg" variant="outline" className="min-w-[140px]" asChild>
-                  <Link href="/support">Get Support</Link>
-                </Button>
-              </div>
+    <motion.div 
+      initial="initial"
+      animate="animate"
+      variants={staggerContainer}
+      className="flex flex-col items-center justify-center w-full"
+    >
+      <section className="w-full max-w-7xl mx-auto px-4 py-12 md:py-16 lg:py-24">
+        <div className="flex flex-col items-center gap-8 md:gap-12">
+          <motion.div variants={fadeInUp} className="text-center max-w-3xl mx-auto">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl lg:text-6xl mb-6">
+              The Student Voice
+            </h1>
+            <p className="text-muted-foreground sm:text-xl leading-relaxed">
+              Your college journey is unique and transformative. We're here to help you navigate academic challenges,
+              manage stress, and build meaningful connections while pursuing your educational goals.
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center mt-8">
+              <Button size="lg" className="min-w-[140px]" asChild>
+                <Link href="/resources">Get Started</Link>
+              </Button>
+              <Button size="lg" variant="outline" className="min-w-[140px]" asChild>
+                <Link href="/support">Get Support</Link>
+              </Button>
             </div>
+          </motion.div>
 
-            <Suspense fallback={<Loading />}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full px-4 md:px-6">
-                {SUPPORT_CARDS.map((card, index) => (
-                  <Link href={card.href} key={index} className="transition-transform hover:scale-[1.02]">
-                    <Card className="flex h-full flex-col">
-                      <CardHeader>
-                        <CardTitle>{card.title}</CardTitle>
-                        <CardDescription>{card.description}</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground">{card.content}</p>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
-            </Suspense>
-          </div>
+          <Suspense fallback={<Loading />}>
+            <motion.div 
+              variants={fadeInUp}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full"
+            >
+              {SUPPORT_CARDS.map((card, index) => (
+                <Link href={card.href} key={index} className="transition-transform hover:scale-[1.02] duration-300">
+                  <Card className="h-full">
+                    <CardHeader>
+                      <CardTitle>{card.title}</CardTitle>
+                      <CardDescription>{card.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground">{card.content}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </motion.div>
+          </Suspense>
         </div>
       </section>
-    </main>
+    </motion.div>
   );
 }
 

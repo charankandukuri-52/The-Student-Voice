@@ -1,42 +1,50 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/ui/navbar";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { Footer } from "@/components/ui/footer";
-import { Toaster } from "@/components/ui/toaster";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap',
+  preload: true
+});
 
 export const metadata: Metadata = {
-  title: "Student Voice - Supporting Your Educational Journey",
-  description: "Access resources, support, and guidance for your academic success.",
+  title: "Clear - Student Support Platform",
+  description: "Supporting your educational journey with resources and community.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <ProgressBar />
-          <div className="relative min-h-screen flex flex-col">
+          <div className="relative flex min-h-screen flex-col">
+            <ProgressBar />
             <Navbar />
-            <main className="flex-grow">
+            <main className="flex-1 w-full">
               {children}
             </main>
             <Footer />
           </div>
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>

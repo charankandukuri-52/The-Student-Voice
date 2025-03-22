@@ -57,22 +57,22 @@ export function Navbar() {
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="container flex h-14 items-center justify-between px-4">
+      <div className="container flex h-14 items-center justify-between">
         <Link 
           href="/" 
           className="flex items-center space-x-2"
           aria-label="Return to homepage"
         >
-          <span className="font-bold">Student Voice</span>
+          <span className="font-bold lg:px-12 px-4"> The Student Voice</span>
         </Link>
 
         {/* Desktop Navigation (only visible on screens larger than 1024px) */}
-        <div className="hidden lg:flex lg:items-center lg:gap-4">
+        <div className="hidden lg:flex lg:items-center lg:gap-[30px] lg:ml-8">
           {navigationItems.map((item) => (
             <Link
               key={item.title}
               href={item.href}
-              className="text-sm font-medium transition-colors hover:text-foreground/80 px-2 py-1"
+              className="text-sm font-medium transition-colors hover:text-foreground/80"
               aria-label={item.description}
             >
               {item.title}
@@ -80,7 +80,7 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-[30px]">
           <ThemeToggle />
           <Button 
             asChild 
