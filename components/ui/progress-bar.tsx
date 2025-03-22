@@ -1,20 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
+import * as React from "react";
+import { motion } from "framer-motion";
 
 export function ProgressBar() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
-    <motion.div
-      className="fixed top-0 left-0 right-0 h-1 bg-primary z-[100] origin-left"
-      style={{ scaleX }}
-    />
+    <div className="fixed top-0 left-0 right-0 z-50">
+      <motion.div
+        className="h-1 bg-primary"
+        initial={{ width: "0%" }}
+        animate={{ width: "100%" }}
+        transition={{
+          duration: 2,
+          ease: "easeInOut",
+        }}
+        style={{
+          boxShadow: "0 0 10px rgba(var(--primary), 0.5)",
+        }}
+      />
+    </div>
   );
 } 

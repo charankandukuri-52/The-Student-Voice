@@ -1,57 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  poweredByHeader: false,
-  compress: true,
-
-  // Image optimization
-  images: {
-    domains: ['your-domain.com'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    formats: ['image/webp'],
+  swcMinify: true,
+  // Optimize caching
+  onDemandEntries: {
+    // period in ms where the server will keep pages in the buffer
+    maxInactiveAge: 25 * 1000,
+    // number of pages that should be kept simultaneously without being disposed
+    pagesBufferLength: 2,
   },
-
-  // Security headers
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin'
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
-          }
-        ]
-      }
-    ];
-  },
-
-  // Performance optimizations
+  // Optimize build performance
   experimental: {
     optimizeCss: true,
-    scrollRestoration: true,
-  }
+    optimizePackageImports: ['@tabler/icons-react', 'lucide-react'],
+  },
+  // Disable image optimization in development for faster builds
+  images: {
+    unoptimized: process.env.NODE_ENV === 'development',
+  },
 }
 
-module.exports = nextConfig; 
+module.exports = nextConfig 
