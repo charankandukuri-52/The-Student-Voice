@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Clear - Student Support Platform",
+  title: "The Student Voice - Student Support Platform",
   description: "Supporting your educational journey with resources and community.",
 };
 
