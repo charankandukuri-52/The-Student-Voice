@@ -38,61 +38,61 @@ const TEAM_MEMBERS = [
   {
     name: "Charan Kandukuri",
     role: "Founder & CEO",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1618641986557-1ecd230959aa?w=500&h=500&fit=crop",
     bio: "Visionary entrepreneur with a passion for educational innovation and student empowerment."
   },
   {
     name: "Priya Sharma",
     role: "Head of Student Success",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=500&fit=crop",
     bio: "Educational psychologist specializing in academic performance and student well-being."
   },
   {
     name: "Arjun Reddy",
     role: "Community Manager",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=500&h=500&fit=crop",
     bio: "Experienced in building inclusive student communities and fostering meaningful connections."
   },
   {
     name: "Ananya Patel",
     role: "Mental Health Advocate",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&h=500&fit=crop",
     bio: "Licensed therapist focused on student mental health and stress management."
   },
   {
     name: "Rahul Verma",
     role: "Technical Director",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500&h=500&fit=crop",
     bio: "Tech innovator leading our digital transformation and platform development."
   },
   {
     name: "Meera Krishnan",
     role: "Academic Advisor",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=500&h=500&fit=crop",
     bio: "Expert in curriculum development and academic planning strategies."
   },
   {
     name: "Aditya Singh",
     role: "Career Counselor",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&h=500&fit=crop",
     bio: "Career development specialist helping students navigate their professional journey."
   },
   {
     name: "Neha Gupta",
     role: "Student Engagement Lead",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1598550880863-4e8aa3d0edb4?w=500&h=500&fit=crop",
     bio: "Creating engaging programs to enhance student participation and leadership."
   },
   {
     name: "Vikram Malhotra",
     role: "Research Director",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=500&h=500&fit=crop",
     bio: "Leading research initiatives to improve student support methodologies."
   },
   {
     name: "Sanjana Iyer",
     role: "Wellness Coordinator",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=500&h=500&fit=crop",
     bio: "Promoting holistic wellness through comprehensive health programs."
   },
   {
@@ -104,7 +104,7 @@ const TEAM_MEMBERS = [
   {
     name: "Divya Rajan",
     role: "Program Director",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=500&h=500&fit=crop",
+    image: "https://images.unsplash.com/photo-1544717302-de2939b7ef71?w=500&h=500&fit=crop",
     bio: "Overseeing the development and implementation of student support programs."
   }
 ];
