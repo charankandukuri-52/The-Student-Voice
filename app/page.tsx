@@ -446,7 +446,6 @@ export default function Home() {
     </motion.div>
   );
 }
-
 const SUPPORT_CARDS = [
   {
     title: "Financial Aid",
@@ -497,3 +496,4 @@ const SUPPORT_CARDS = [
     stats: "24/7 Security"
   }
 ];
+
