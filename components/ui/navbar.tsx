@@ -1,0 +1,139 @@
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { IconMenu2 } from "@tabler/icons-react";
+import { ThemeToggle } from "../theme-toggle";
+
+const navigationItems = [
+  {
+    title: "Financial Aid",
+    href: "/financial-aid",
+    description: "Access educational resources and materials",
+  },
+  {
+    title: "Academic Support",
+    href: "/academic-support",
+    description: "Get help with your studies",
+  },
+  {
+    title: "Mental Health",
+    href: "/mental-health",
+    description: "Access mental health support services",
+  },
+  {
+    title: "Community",
+    href: "/community",
+    description: "Connect with other students",
+  },
+  {
+    title: "Career Guidance",
+    href: "/career",
+    description: "Explore career opportunities",
+  },
+];
+
+export function Navbar() {
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return (
+    <nav
+      className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <div className="container flex h-14 items-center justify-between px-4">
+        <Link 
+          href="/" 
+          className="flex items-center space-x-2"
+          aria-label="Return to homepage"
+        >
+          <span className="font-bold">Student Voice</span>
+        </Link>
+
+        {/* Desktop Navigation (only visible on screens larger than 1024px) */}
+        <div className="hidden lg:flex lg:items-center lg:gap-4">
+          {navigationItems.map((item) => (
+            <Link
+              key={item.title}
+              href={item.href}
+              className="text-sm font-medium transition-colors hover:text-foreground/80 px-2 py-1"
+              aria-label={item.description}
+            >
+              {item.title}
+            </Link>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button 
+            asChild 
+            variant="outline"
+            size="sm"
+            className="hidden sm:inline-flex"
+            aria-label="Sign in to your account"
+          >
+            <Link href="/login">Login</Link>
+          </Button>
+
+          {/* Sheet for screens below 1024px */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden"
+                aria-label="Open menu"
+              >
+                <IconMenu2 className="h-5 w-5" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-full sm:w-80">
+              <SheetHeader className="mb-4">
+                <SheetTitle>Navigation</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col space-y-2">
+                {navigationItems.map((item) => (
+                  <Link
+                    key={item.title}
+                    href={item.href}
+                    className="flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
+                    aria-label={item.description}
+                  >
+                    {item.title}
+                  </Link>
+                ))}
+                <hr className="my-2 border-t border-border" />
+                <Button 
+                  asChild 
+                  variant="outline"
+                  className="sm:hidden w-full"
+                  aria-label="Sign in to your account"
+                >
+                  <Link href="/login">Login</Link>
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </nav>
+  );
+} 
