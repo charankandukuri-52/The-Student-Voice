@@ -9,11 +9,11 @@ export function AutoRefresh() {
   const [isLoading, setIsLoading] = useState(true);
   
   useEffect(() => {
-    const refreshCount = parseInt(sessionStorage.getItem("refreshCount") || "0");
+    const hasRefreshed = sessionStorage.getItem("hasRefreshed");
     
-    if (pathname === "/" && refreshCount < 2) {
-      // Increment refresh count
-      sessionStorage.setItem("refreshCount", (refreshCount + 1).toString());
+    if (pathname === "/" && !hasRefreshed) {
+      // Mark as refreshed
+      sessionStorage.setItem("hasRefreshed", "true");
       
       // Show loading screen for 1 second before refresh
       const timer = setTimeout(() => {
@@ -22,7 +22,7 @@ export function AutoRefresh() {
       
       return () => clearTimeout(timer);
     } else if (pathname === "/") {
-      // After two refreshes, hide loading screen immediately
+      // After refresh, hide loading screen immediately
       setIsLoading(false);
     }
   }, [pathname]);
