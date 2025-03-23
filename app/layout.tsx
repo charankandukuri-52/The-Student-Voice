@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/ui/navbar";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { Footer } from "@/components/ui/footer";
+import { AutoRefresh } from "@/components/auto-refresh";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <AutoRefresh />
           <div className="relative flex min-h-screen flex-col">
             <ProgressBar />
             <Navbar />
