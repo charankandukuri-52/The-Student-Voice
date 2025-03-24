@@ -1,0 +1,14 @@
+{
+    "scholarshipId": "test-scholarship-id",
+    "personalInfo": {
+        "fullName": "Test User",
+        "dateOfBirth": "2000-01-01",
+        "address": "123 Test St",
+        "phone": "1234567890"
+    },
+    "academicInfo": {
+        "currentGPA": 3.8,
+        "expectedGraduation": "2024-12-31",
+        "major": "Computer Science"
+    }
+} 
