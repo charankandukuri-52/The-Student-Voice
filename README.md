@@ -1,127 +1,269 @@
-# Scholarship Management Microservice
+# Scholarship Management Service
 
-A high-performance, scalable microservice for managing scholarship applications and processing. Built with Node.js, Express, and MongoDB, featuring JWT authentication and comprehensive load testing capabilities.
+A comprehensive scholarship management system built with Node.js, Express, and MongoDB. This service handles scholarship applications, eligibility checks, document management, and award distribution with advanced features for both applicants and administrators.
 
-## Table of Contents
-- [System Architecture](#system-architecture)
-- [High-Level Design](#high-level-design)
-- [Low-Level Design](#low-level-design)
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Running the Application](#running-the-application)
-- [API Documentation](#api-documentation)
-- [Load Testing](#load-testing)
-- [Performance Metrics](#performance-metrics)
-- [Security](#security)
-- [Monitoring](#monitoring)
+## Architecture Overview
 
-## System Architecture
-
-### High-Level Design
-
+### High-Level Architecture
 ```mermaid
 graph TD
-    A[Client Applications] --> B[API Gateway]
-    B --> C[Scholarship Service]
-    C --> D[(MongoDB)]
-    C --> E[Redis Cache]
-    C --> F[File Storage]
-    G[Monitoring] --> C
-    H[Load Balancer] --> B
-    I[Email Service] --> C
-    J[Analytics Service] --> C
-    K[Notification Service] --> C
+    A[Client Applications] -->|HTTPS| B[Load Balancer]
+    B -->|HTTPS| C[API Gateway]
+    C -->|Internal| D[Scholarship Service]
+    D -->|Internal| E[Document Service]
+    D -->|Internal| F[Notification Service]
+    D -->|Internal| G[Payment Service]
+    D -->|Internal| H[Database Service]
+    
+    subgraph Security Layer
+        I[WAF]
+        J[Rate Limiter]
+        K[DDoS Protection]
+    end
+    
+    subgraph Monitoring
+        L[Log Aggregator]
+        M[Metrics Collector]
+        N[Alert Manager]
+    end
+    
+    B --> I
+    I --> J
+    J --> K
+    D --> L
+    D --> M
+    M --> N
 ```
 
-### Low-Level Design
-
+### Detailed Component Architecture
 ```mermaid
 graph TD
-    A[API Layer] --> B[Service Layer]
-    B --> C[Data Access Layer]
-    C --> D[(MongoDB)]
-    B --> E[Cache Layer]
-    E --> F[(Redis)]
-    B --> G[File Service]
-    G --> H[Cloud Storage]
-    I[Auth Service] --> A
-    J[Monitoring] --> B
-    K[Rate Limiter] --> A
-    L[Request Validator] --> A
-    M[Error Handler] --> A
-    N[Logger] --> B
+    subgraph Scholarship Service
+        A[API Layer] --> B[Controller Layer]
+        B --> C[Service Layer]
+        C --> D[Repository Layer]
+        D --> E[Database]
+    end
+    
+    subgraph Document Management
+        F[Document Upload]
+        G[Document Validation]
+        H[Document Storage]
+        I[Document Retrieval]
+    end
+    
+    subgraph Application Processing
+        J[Eligibility Checker]
+        K[Application Validator]
+        L[Scoring Engine]
+        M[Award Calculator]
+    end
+    
+    subgraph Notification System
+        N[Email Service]
+        O[SMS Service]
+        P[Notification Queue]
+    end
+    
+    B --> F
+    C --> J
+    C --> K
+    C --> L
+    C --> M
+    C --> P
+    P --> N
+    P --> O
 ```
 
-### Database Schema
+## Architecture Details
 
+### High-Level Design (HLD)
+
+#### 1. System Components
+- **Client Applications**: Web portal and mobile applications
+- **Load Balancer**: Distributes traffic across multiple service instances
+- **API Gateway**: Routes requests and handles cross-cutting concerns
+- **Scholarship Service**: Core scholarship management functionality
+- **Document Service**: Handles document upload and management
+- **Notification Service**: Manages communications
+- **Payment Service**: Handles scholarship disbursements
+- **Database Service**: Data persistence layer
+
+#### 2. Security Architecture
+- **Web Application Firewall (WAF)**: Protects against web-based attacks
+- **Rate Limiter**: Prevents abuse and ensures fair usage
+- **DDoS Protection**: Mitigates distributed denial of service attacks
+- **JWT Authentication**: Stateless authentication mechanism
+- **Document Encryption**: Secure document storage
+- **Input Validation**: Prevents injection attacks
+
+#### 3. Monitoring Architecture
+- **Log Aggregator**: Centralizes logs from all components
+- **Metrics Collector**: Gathers system performance metrics
+- **Alert Manager**: Manages system alerts and notifications
+
+### Low-Level Design (LLD)
+
+#### 1. Scholarship Service Components
+```mermaid
+classDiagram
+    class ScholarshipController {
+        +createScholarship()
+        +applyForScholarship()
+        +reviewApplication()
+        +awardScholarship()
+        +trackStatus()
+    }
+    
+    class ScholarshipService {
+        +validateEligibility()
+        +processApplication()
+        +calculateAward()
+        +generateReports()
+        +manageDocuments()
+    }
+    
+    class DocumentService {
+        +uploadDocument()
+        +validateDocument()
+        +storeDocument()
+        +retrieveDocument()
+    }
+    
+    class NotificationService {
+        +sendEmail()
+        +sendSMS()
+        +queueNotification()
+        +trackDelivery()
+    }
+    
+    ScholarshipController --> ScholarshipService
+    ScholarshipService --> DocumentService
+    ScholarshipService --> NotificationService
+```
+
+#### 2. Application Flow
+```mermaid
+sequenceDiagram
+    participant A as Applicant
+    participant S as Scholarship Service
+    participant D as Document Service
+    participant N as Notification Service
+    participant P as Payment Service
+    
+    A->>S: Submit Application
+    S->>D: Upload Documents
+    S->>S: Validate Eligibility
+    S->>S: Process Application
+    S->>N: Send Status Update
+    S->>P: Initiate Payment
+    P-->>A: Award Disbursed
+```
+
+#### 3. Document Management Flow
+```mermaid
+sequenceDiagram
+    participant A as Applicant
+    participant S as Scholarship Service
+    participant V as Validator
+    participant D as Document Storage
+    
+    A->>S: Upload Document
+    S->>V: Validate Document
+    V->>D: Store Document
+    D-->>S: Confirm Storage
+    S-->>A: Confirm Upload
+```
+
+#### 4. Database Schema
 ```mermaid
 erDiagram
+    SCHOLARSHIP ||--o{ APPLICATION : has
+    APPLICATION ||--o{ DOCUMENT : contains
+    APPLICATION ||--o{ PAYMENT : receives
     USER ||--o{ APPLICATION : submits
-    USER {
-        string id
-        string email
-        string password
-        string role
-        date createdAt
-        date updatedAt
-    }
-    SCHOLARSHIP ||--o{ APPLICATION : receives
+    
     SCHOLARSHIP {
-        string id
-        string title
+        string id PK
+        string name
         string description
-        number amount
+        decimal amount
         date deadline
-        object requirements
-        string status
+        json requirements
+        boolean active
     }
+    
     APPLICATION {
-        string id
-        string userId
-        string scholarshipId
-        object personalInfo
-        object academicInfo
+        string id PK
+        string scholarship_id FK
+        string user_id FK
         string status
-        date submittedAt
+        json details
+        date submitted_at
+        date reviewed_at
+    }
+    
+    DOCUMENT {
+        string id PK
+        string application_id FK
+        string type
+        string url
+        boolean verified
+        date uploaded_at
+    }
+    
+    PAYMENT {
+        string id PK
+        string application_id FK
+        decimal amount
+        string status
+        date processed_at
     }
 ```
+
+#### 5. Error Handling Strategy
+- **Validation Errors**: 400 Bad Request
+- **Authentication Errors**: 401 Unauthorized
+- **Authorization Errors**: 403 Forbidden
+- **Not Found Errors**: 404 Not Found
+- **Document Errors**: 422 Unprocessable Entity
+- **Rate Limit Errors**: 429 Too Many Requests
+- **Server Errors**: 500 Internal Server Error
+
+#### 6. Logging Strategy
+- **Application Logs**: Winston logger
+- **Document Logs**: Document processing events
+- **Payment Logs**: Transaction records
+- **Audit Logs**: Application review events
 
 ## Features
 
-- 🔐 JWT-based Authentication
-- 📝 Scholarship Management
-- 📋 Application Processing
-- 🔍 Advanced Search & Filtering
-- 📊 Analytics & Reporting
-- 📱 Mobile-First Design
-- 🔄 Real-time Updates
-- 📨 Email Notifications
-- 🔒 Role-Based Access Control
-- 📈 Performance Monitoring
-- 🧪 Comprehensive Testing
-- 📦 Containerization Support
-- 🔄 Webhook Integration
-- 📊 Dashboard Analytics
-- 🔍 Full-Text Search
-- 📱 Mobile API Support
+- 📝 Scholarship Application Management
+- 📄 Document Upload and Validation
+- ✅ Eligibility Checking
+- 💰 Award Calculation and Distribution
+- 📧 Automated Notifications
+- 📊 Reporting and Analytics
+- 🔒 Secure Document Storage
+- 👥 Multi-role Access Control
+- 📱 Mobile-friendly Interface
+- 📈 Application Tracking
 
 ## Prerequisites
 
-- Node.js >= 14.x
-- MongoDB >= 4.4
-- Redis >= 6.x
-- Docker (optional)
-- npm or yarn
-- Elasticsearch (for full-text search)
+- Node.js (v14 or higher)
+- MongoDB (v4.4 or higher)
+- Redis (for caching)
+- AWS S3 (for document storage)
+- SMTP Server (for notifications)
+- npm or yarn package manager
 
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-org/scholarship-service.git
-cd scholarship-service
+git clone <repository-url>
+cd scholarship
 ```
 
 2. Install dependencies:
@@ -129,354 +271,247 @@ cd scholarship-service
 npm install
 ```
 
-3. Set up environment variables:
-```bash
-cp .env.example .env
-```
-
-## Configuration
-
-Create a `.env` file with the following variables:
-
+3. Create a `.env` file in the root directory:
 ```env
-PORT=3001
+PORT=3000
 MONGODB_URI=mongodb://localhost:27017/scholarship_db
-REDIS_URL=redis://localhost:6379
-JWT_SECRET=your-secret-key
-JWT_EXPIRES_IN=24h
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=your-email
-SMTP_PASS=your-password
-ELASTICSEARCH_URL=http://localhost:9200
-AWS_ACCESS_KEY_ID=your-access-key
-AWS_SECRET_ACCESS_KEY=your-secret-key
-AWS_REGION=your-region
-S3_BUCKET=your-bucket-name
+JWT_SECRET=your_jwt_secret
+AWS_ACCESS_KEY=your_aws_access_key
+AWS_SECRET_KEY=your_aws_secret_key
+AWS_BUCKET=your_bucket_name
+EMAIL_USER=your_email@example.com
+EMAIL_PASSWORD=your_email_password
 ```
 
-## Running the Application
-
-### Development Mode
+4. Start the service:
 ```bash
-npm run dev
-```
-
-### Production Mode
-```bash
-npm run build
 npm start
-```
-
-### Docker
-```bash
-docker-compose up -d
 ```
 
 ## API Documentation
 
-### Authentication Endpoints
+### Scholarship Management
 
-#### POST /api/auth/register
-Register a new user
-```json
+#### Create Scholarship
+```http
+POST /api/scholarships
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
 {
-  "email": "user@example.com",
-  "password": "securepassword",
-  "role": "student",
-  "firstName": "John",
-  "lastName": "Doe",
-  "phoneNumber": "+1234567890"
+    "name": "Academic Excellence Scholarship",
+    "description": "Award for outstanding academic performance",
+    "amount": 5000,
+    "deadline": "2024-12-31",
+    "requirements": {
+        "minGPA": 3.5,
+        "documents": ["transcript", "recommendation"]
+    }
 }
 ```
 
-#### POST /api/auth/login
-Authenticate user
-```json
+#### Apply for Scholarship
+```http
+POST /api/scholarships/:id/applications
+Authorization: Bearer <jwt_token>
+Content-Type: multipart/form-data
+
 {
-  "email": "user@example.com",
-  "password": "securepassword"
+    "personalInfo": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john@example.com"
+    },
+    "academicInfo": {
+        "gpa": 3.8,
+        "major": "Computer Science"
+    },
+    "documents": {
+        "transcript": <file>,
+        "recommendation": <file>
+    }
 }
 ```
 
-#### POST /api/auth/refresh-token
-Refresh access token
-```json
+#### Review Application
+```http
+PUT /api/applications/:id/review
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
 {
-  "refreshToken": "your-refresh-token"
+    "status": "approved",
+    "comments": "Excellent academic record",
+    "awardAmount": 5000
 }
 ```
 
-#### POST /api/auth/forgot-password
-Request password reset
-```json
+### Document Management
+
+#### Upload Document
+```http
+POST /api/applications/:id/documents
+Authorization: Bearer <jwt_token>
+Content-Type: multipart/form-data
+
 {
-  "email": "user@example.com"
+    "type": "transcript",
+    "file": <file>
 }
 ```
 
-#### POST /api/auth/reset-password
-Reset password with token
-```json
+#### Validate Document
+```http
+POST /api/documents/:id/validate
+Authorization: Bearer <jwt_token>
+```
+
+### Payment Management
+
+#### Initiate Payment
+```http
+POST /api/applications/:id/payments
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
 {
-  "token": "reset-token",
-  "password": "new-password"
+    "amount": 5000,
+    "method": "bank_transfer"
 }
 ```
 
-### Scholarship Endpoints
+## Security Features
 
-#### GET /api/scholarships
-Get all scholarships (paginated)
-Query Parameters:
-- page (default: 1)
-- limit (default: 10)
-- type (merit, need-based, athletic)
-- status (active, closed, upcoming)
-- deadline (before, after)
-- amount (min, max)
-- academicLevel (undergraduate, graduate)
-- search (full-text search)
+### Document Security
+- Encrypted storage
+- Access control
+- Version tracking
+- Audit logging
 
-#### GET /api/scholarships/:id
-Get scholarship by ID
-
-#### POST /api/scholarships
-Create new scholarship (Admin only)
-```json
-{
-  "title": "Merit Scholarship",
-  "description": "For outstanding students",
-  "amount": 5000,
-  "deadline": "2024-12-31",
-  "requirements": {
-    "minGPA": 3.5,
-    "academicLevel": "undergraduate",
-    "majors": ["Computer Science", "Engineering"],
-    "citizenship": ["US", "Canada"],
-    "documents": ["transcript", "essay", "recommendation"]
-  },
-  "type": "merit",
-  "status": "active",
-  "maxAwards": 10,
-  "renewable": true,
-  "renewalRequirements": {
-    "minGPA": 3.3,
-    "creditsPerSemester": 12
-  }
-}
-```
-
-#### PUT /api/scholarships/:id
-Update scholarship (Admin only)
-```json
-{
-  "title": "Updated Merit Scholarship",
-  "amount": 6000,
-  "deadline": "2024-12-31"
-}
-```
-
-#### DELETE /api/scholarships/:id
-Delete scholarship (Admin only)
-
-### Application Endpoints
-
-#### POST /api/applications
-Submit scholarship application
-```json
-{
-  "scholarshipId": "scholarship_id",
-  "personalInfo": {
-    "fullName": "John Doe",
-    "dateOfBirth": "2000-01-01",
-    "address": "123 Main St",
-    "city": "New York",
-    "state": "NY",
-    "zipCode": "10001",
-    "phoneNumber": "+1234567890",
-    "citizenship": "US"
-  },
-  "academicInfo": {
-    "currentGPA": 3.8,
-    "expectedGraduation": "2024-12-31",
-    "major": "Computer Science",
-    "minor": "Mathematics",
-    "currentYear": "Junior",
-    "creditsCompleted": 75,
-    "creditsInProgress": 15
-  },
-  "documents": {
-    "transcript": "base64_encoded_file",
-    "essay": "base64_encoded_file",
-    "recommendation": "base64_encoded_file"
-  },
-  "financialInfo": {
-    "fafsaSubmitted": true,
-    "expectedFamilyContribution": 5000,
-    "otherScholarships": [
-      {
-        "name": "Academic Excellence",
-        "amount": 2000
-      }
-    ]
-  }
-}
-```
-
-#### GET /api/applications
-Get user's applications
-Query Parameters:
-- status (pending, approved, rejected)
-- scholarshipId
-- submittedAfter
-- submittedBefore
-
-#### GET /api/applications/:id
-Get application details
-
-#### PUT /api/applications/:id
-Update application status (Admin only)
-```json
-{
-  "status": "approved",
-  "notes": "Excellent academic record",
-  "awardAmount": 5000
-}
-```
-
-### Analytics Endpoints
-
-#### GET /api/analytics/scholarships
-Get scholarship analytics
-Query Parameters:
-- timeRange (week, month, year)
-- type
-- status
-
-#### GET /api/analytics/applications
-Get application analytics
-Query Parameters:
-- timeRange
-- status
-- scholarshipId
-
-#### GET /api/analytics/users
-Get user analytics
-Query Parameters:
-- timeRange
-- role
-- status
-
-## Load Testing
-
-### Performance Metrics
-
-#### GET /api/scholarships
-- Requests per second: 11,471
-- Mean response time: 8.717ms
-- 99th percentile: 16ms
-- Max response time: 105ms
-- Concurrency level: 100
-- Error rate: 0.01%
-- Cache hit rate: 95%
-- Database query time: 5ms
-
-#### POST /api/auth/login
-- Requests per second: 11,204
-- Mean response time: 4.462ms
-- 99th percentile: 7ms
-- Max response time: 35ms
-- Concurrency level: 50
-- Error rate: 0.02%
-- JWT generation time: 2ms
-- Password verification time: 1ms
-
-#### POST /api/applications
-- Requests per second: 11,123
-- Mean response time: 4.495ms
-- 99th percentile: 7ms
-- Max response time: 71ms
-- Concurrency level: 50
-- Error rate: 0.03%
-- File upload time: 3ms
-- Database write time: 2ms
-
-### Running Load Tests
-
-```bash
-# Run all tests
-./tests/load/ab-test.sh
-
-# Run specific test
-ab -n 100000 -c 50 http://localhost:3001/api/scholarships
-
-# Run with custom parameters
-ab -n 1000000 -c 100 -r -k -s 120 http://localhost:3001/api/scholarships
-```
-
-## Security
-
-### Authentication
-- JWT-based authentication
-- Token expiration
-- Refresh token mechanism
-- Password hashing with bcrypt
-- OAuth2 integration
-- 2FA support
+### Application Security
+- Input validation
+- Rate limiting
+- IP blocking
 - Session management
 
-### Authorization
-- Role-based access control
-- API key validation
+### Payment Security
+- Secure transactions
+- Payment verification
+- Fraud detection
+- Audit trails
+
+## Data Models
+
+### Scholarship Schema
+```javascript
+{
+    name: String,
+    description: String,
+    amount: Number,
+    deadline: Date,
+    requirements: {
+        minGPA: Number,
+        documents: [String],
+        eligibility: Object
+    },
+    status: String,
+    createdAt: Date,
+    updatedAt: Date
+}
+```
+
+### Application Schema
+```javascript
+{
+    scholarshipId: ObjectId,
+    userId: ObjectId,
+    personalInfo: {
+        firstName: String,
+        lastName: String,
+        email: String,
+        phone: String
+    },
+    academicInfo: {
+        gpa: Number,
+        major: String,
+        institution: String
+    },
+    documents: [{
+        type: String,
+        url: String,
+        verified: Boolean
+    }],
+    status: String,
+    awardAmount: Number,
+    submittedAt: Date,
+    reviewedAt: Date
+}
+```
+
+## Error Handling
+
+The service implements comprehensive error handling:
+
+- Validation errors (400)
+- Authentication errors (401)
+- Authorization errors (403)
+- Not found errors (404)
+- Document errors (422)
+- Rate limit errors (429)
+- Server errors (500)
+
+## Logging
+
+The service uses Winston for logging with the following levels:
+- Error: Critical errors
+- Warn: Warning messages
+- Info: General information
+- Debug: Detailed debugging information
+
+Logs are stored in the `logs` directory with separate files for:
+- Scholarship service logs
+- Document service logs
+- Payment service logs
+- Error logs
+
+## Testing
+
+Run the test suite:
+```bash
+npm test
+```
+
+## Deployment
+
+1. Set up environment variables
+2. Configure MongoDB connection
+3. Set up AWS S3 for document storage
+4. Configure email service
+5. Set up payment gateway
+6. Configure monitoring
+7. Deploy to production server
+
+## Best Practices
+
+- Input validation
+- Error handling
+- Security headers
 - Rate limiting
-- Request validation
-- IP whitelisting
-- API versioning
-- Permission-based access
-
-### Data Protection
-- Input sanitization
-- XSS protection
-- CORS configuration
-- Helmet security headers
-- SQL injection prevention
-- File upload validation
-- Data encryption at rest
-
-## Monitoring
-
-### Metrics Collection
-- Request/Response times
-- Error rates
-- Resource utilization
-- Custom business metrics
-- User activity tracking
-- API usage statistics
-- Performance bottlenecks
-
-### Logging
-- Structured logging
-- Error tracking
-- Audit logging
-- Performance logging
-- Security logging
-- Access logging
-- Custom log levels
-
-### Alerts
-- Error rate thresholds
-- Response time alerts
-- Resource utilization alerts
-- Custom business alerts
-- Security incident alerts
-- Performance degradation alerts
-- System health alerts
+- Logging
+- Monitoring
+- Code organization
+- Documentation
+- Testing
+- CI/CD
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch
+2. Create a feature branch
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
+
+## Support
+
+For support, please contact the development team or create an issue in the repository.
