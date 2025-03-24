@@ -2,28 +2,212 @@
 
 A robust and secure user management service built with Node.js, Express, and MongoDB. This service handles user authentication, authorization, and profile management with email verification and security features.
 
-## Architecture
+## Architecture Overview
 
+### High-Level Architecture
 ```mermaid
 graph TD
-    A[Client] -->|HTTP Requests| B[API Gateway]
-    B -->|Routes| C[User Controller]
-    C -->|Business Logic| D[User Service]
-    D -->|Data Access| E[MongoDB]
-    D -->|Email Service| F[SMTP Server]
+    A[Client Applications] -->|HTTPS| B[Load Balancer]
+    B -->|HTTPS| C[API Gateway]
+    C -->|Internal| D[User Service]
+    D -->|Internal| E[Email Service]
+    D -->|Internal| F[Auth Service]
+    D -->|Internal| G[Database Service]
     
-    subgraph Security
-        G[JWT Authentication]
-        H[Password Hashing]
-        I[Email Verification]
-        J[Rate Limiting]
+    subgraph Security Layer
+        H[WAF]
+        I[Rate Limiter]
+        J[DDoS Protection]
     end
     
-    C --> G
-    D --> H
-    D --> I
-    B --> J
+    subgraph Monitoring
+        K[Log Aggregator]
+        L[Metrics Collector]
+        M[Alert Manager]
+    end
+    
+    B --> H
+    H --> I
+    I --> J
+    D --> K
+    D --> L
+    L --> M
 ```
+
+### Detailed Component Architecture
+```mermaid
+graph TD
+    subgraph User Service
+        A[API Layer] --> B[Controller Layer]
+        B --> C[Service Layer]
+        C --> D[Repository Layer]
+        D --> E[Database]
+    end
+    
+    subgraph Security Components
+        F[JWT Handler]
+        G[Password Manager]
+        H[Rate Limiter]
+        I[Input Validator]
+    end
+    
+    subgraph Email Service
+        J[Email Queue]
+        K[SMTP Client]
+        L[Template Engine]
+    end
+    
+    B --> F
+    C --> G
+    A --> H
+    B --> I
+    C --> J
+    J --> K
+    K --> L
+```
+
+## Architecture Details
+
+### High-Level Design (HLD)
+
+#### 1. System Components
+- **Client Applications**: Web and mobile applications
+- **Load Balancer**: Distributes traffic across multiple service instances
+- **API Gateway**: Routes requests and handles cross-cutting concerns
+- **User Service**: Core user management functionality
+- **Email Service**: Handles email notifications
+- **Auth Service**: Manages authentication and authorization
+- **Database Service**: Data persistence layer
+
+#### 2. Security Architecture
+- **Web Application Firewall (WAF)**: Protects against web-based attacks
+- **Rate Limiter**: Prevents abuse and ensures fair usage
+- **DDoS Protection**: Mitigates distributed denial of service attacks
+- **JWT Authentication**: Stateless authentication mechanism
+- **Password Hashing**: Secure password storage using bcrypt
+- **Input Validation**: Prevents injection attacks
+
+#### 3. Monitoring Architecture
+- **Log Aggregator**: Centralizes logs from all components
+- **Metrics Collector**: Gathers system performance metrics
+- **Alert Manager**: Manages system alerts and notifications
+
+### Low-Level Design (LLD)
+
+#### 1. User Service Components
+```mermaid
+classDiagram
+    class UserController {
+        +register()
+        +login()
+        +verifyEmail()
+        +updateProfile()
+        +changePassword()
+    }
+    
+    class UserService {
+        +createUser()
+        +authenticateUser()
+        +verifyEmail()
+        +updateUser()
+        +changePassword()
+    }
+    
+    class UserRepository {
+        +findById()
+        +findByEmail()
+        +create()
+        +update()
+        +delete()
+    }
+    
+    UserController --> UserService
+    UserService --> UserRepository
+```
+
+#### 2. Data Flow
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as API Gateway
+    participant U as User Service
+    participant E as Email Service
+    participant D as Database
+    
+    C->>A: Register Request
+    A->>U: Validate & Route
+    U->>D: Create User
+    U->>E: Send Verification Email
+    E-->>C: Email Sent
+    U-->>C: Registration Response
+```
+
+#### 3. Security Implementation
+- **Authentication Flow**:
+  1. User submits credentials
+  2. Service validates credentials
+  3. JWT token generated
+  4. Token returned to client
+  5. Token used for subsequent requests
+
+- **Authorization Flow**:
+  1. Token validated on each request
+  2. Role-based access control
+  3. Resource-level permissions
+  4. Audit logging
+
+#### 4. Database Schema
+```mermaid
+erDiagram
+    USER ||--o{ SESSION : has
+    USER ||--o{ PASSWORD_RESET : has
+    USER ||--o{ EMAIL_VERIFICATION : has
+    
+    USER {
+        string id PK
+        string email
+        string password_hash
+        string role
+        boolean is_verified
+        datetime created_at
+        datetime updated_at
+    }
+    
+    SESSION {
+        string id PK
+        string user_id FK
+        string token
+        datetime expires_at
+    }
+    
+    PASSWORD_RESET {
+        string id PK
+        string user_id FK
+        string token
+        datetime expires_at
+    }
+    
+    EMAIL_VERIFICATION {
+        string id PK
+        string user_id FK
+        string token
+        datetime expires_at
+    }
+```
+
+#### 5. Error Handling Strategy
+- **Validation Errors**: 400 Bad Request
+- **Authentication Errors**: 401 Unauthorized
+- **Authorization Errors**: 403 Forbidden
+- **Not Found Errors**: 404 Not Found
+- **Rate Limit Errors**: 429 Too Many Requests
+- **Server Errors**: 500 Internal Server Error
+
+#### 6. Logging Strategy
+- **Application Logs**: Winston logger
+- **Access Logs**: Request/response logging
+- **Error Logs**: Detailed error tracking
+- **Audit Logs**: Security event tracking
 
 ## Features
 
