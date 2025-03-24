@@ -1,211 +1,308 @@
 # User Management Service
 
-This is the User Management Microservice for the TSV Backend. It handles user authentication, authorization, and management with role-based access control.
+A robust and secure user management service built with Node.js, Express, and MongoDB. This service handles user authentication, authorization, and profile management with email verification and security features.
+
+## Architecture
+
+```mermaid
+graph TD
+    A[Client] -->|HTTP Requests| B[API Gateway]
+    B -->|Routes| C[User Controller]
+    C -->|Business Logic| D[User Service]
+    D -->|Data Access| E[MongoDB]
+    D -->|Email Service| F[SMTP Server]
+    
+    subgraph Security
+        G[JWT Authentication]
+        H[Password Hashing]
+        I[Email Verification]
+        J[Rate Limiting]
+    end
+    
+    C --> G
+    D --> H
+    D --> I
+    B --> J
+```
 
 ## Features
 
-- User registration and authentication
-- JWT-based authentication
-- Role-based access control (Admin and User roles)
-- Password reset functionality
-- Email verification
-- Account security features (login attempts, account locking)
-- Comprehensive logging
-- API documentation
+- 🔐 Secure Authentication with JWT
+- ✉️ Email Verification System
+- 🔒 Password Hashing and Security
+- 👥 Role-Based Access Control
+- 📧 Email Notifications
+- 🔄 Password Reset Flow
+- 🛡️ Rate Limiting
+- 📝 User Profile Management
+- 🔍 User Search and Filtering
+- 🚫 Account Locking
 
 ## Prerequisites
 
-- Node.js (>=14.0.0)
-- MongoDB
-- npm or yarn
+- Node.js (v14 or higher)
+- MongoDB (v4.4 or higher)
+- SMTP Server (for email notifications)
+- npm or yarn package manager
 
 ## Installation
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Create a `.env` file in the root directory with the following variables:
-   ```
-   PORT=3000
-   NODE_ENV=development
-   MONGODB_URI=mongodb://localhost:27017/users-db
-   JWT_SECRET=your-secret-key
-   JWT_EXPIRES_IN=24h
-   EMAIL_SERVICE=gmail
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASS=your-email-password
-   BCRYPT_SALT_ROUNDS=10
-   MAX_LOGIN_ATTEMPTS=5
-   ACCOUNT_LOCKOUT_DURATION=30
-   LOG_LEVEL=info
-   LOG_FILE=logs/user-service.log
-   ```
-
-## Running the Service
-
-Development mode:
+1. Clone the repository:
 ```bash
-npm run dev
+git clone <repository-url>
+cd user-management
 ```
 
-Production mode:
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Create a `.env` file in the root directory:
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/tsv_db
+JWT_SECRET=your_jwt_secret
+EMAIL_USER=your_email@example.com
+EMAIL_PASSWORD=your_email_password
+```
+
+4. Start the service:
 ```bash
 npm start
 ```
 
-## API Endpoints
+## API Documentation
 
-### Public Routes
+### Authentication Endpoints
 
 #### Register User
-- **POST** `/api/users/register`
-- Body:
-  ```json
-  {
+```http
+POST /api/users/register
+Content-Type: application/json
+
+{
     "firstName": "John",
     "lastName": "Doe",
     "email": "john@example.com",
-    "password": "password123",
-    "phoneNumber": "1234567890"
-  }
-  ```
+    "password": "securePassword123",
+    "role": "user"
+}
+```
 
 #### Login
-- **POST** `/api/users/login`
-- Body:
-  ```json
-  {
+```http
+POST /api/users/login
+Content-Type: application/json
+
+{
     "email": "john@example.com",
-    "password": "password123"
-  }
-  ```
-
-#### Forgot Password
-- **POST** `/api/users/forgot-password`
-- Body:
-  ```json
-  {
-    "email": "john@example.com"
-  }
-  ```
-
-#### Reset Password
-- **POST** `/api/users/reset-password`
-- Body:
-  ```json
-  {
-    "token": "reset-token",
-    "newPassword": "newpassword123"
-  }
-  ```
+    "password": "securePassword123"
+}
+```
 
 #### Verify Email
-- **GET** `/api/users/verify-email/:token`
+```http
+GET /api/users/verify/:token
+```
 
-### Protected Routes (Requires Authentication)
+#### Forgot Password
+```http
+POST /api/users/forgot-password
+Content-Type: application/json
 
-#### Logout
-- **POST** `/api/users/logout`
-- Headers: `Authorization: Bearer <token>`
+{
+    "email": "john@example.com"
+}
+```
 
-#### Get Profile
-- **GET** `/api/users/profile`
-- Headers: `Authorization: Bearer <token>`
+#### Reset Password
+```http
+POST /api/users/reset-password
+Content-Type: application/json
 
-#### Update Profile
-- **PUT** `/api/users/profile`
-- Headers: `Authorization: Bearer <token>`
-- Body:
-  ```json
-  {
+{
+    "token": "reset_token",
+    "password": "newPassword123"
+}
+```
+
+### User Management Endpoints
+
+#### Get User Profile
+```http
+GET /api/users/profile
+Authorization: Bearer <jwt_token>
+```
+
+#### Update User Profile
+```http
+PUT /api/users/profile
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
     "firstName": "John",
     "lastName": "Doe",
-    "phoneNumber": "1234567890"
-  }
-  ```
+    "phoneNumber": "+1234567890"
+}
+```
 
-### Admin Routes
+#### Change Password
+```http
+PUT /api/users/change-password
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+    "currentPassword": "oldPassword123",
+    "newPassword": "newPassword123"
+}
+```
+
+### Admin Endpoints
 
 #### Get All Users
-- **GET** `/api/users/users`
-- Headers: `Authorization: Bearer <token>`
+```http
+GET /api/admin/users
+Authorization: Bearer <jwt_token>
+```
+
+#### Get User by ID
+```http
+GET /api/admin/users/:id
+Authorization: Bearer <jwt_token>
+```
 
 #### Update User Role
-- **PUT** `/api/users/users/:userId/role`
-- Headers: `Authorization: Bearer <token>`
-- Body:
-  ```json
-  {
+```http
+PUT /api/admin/users/:id/role
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
     "role": "admin"
-  }
-  ```
+}
+```
 
 #### Delete User
-- **DELETE** `/api/users/users/:userId`
-- Headers: `Authorization: Bearer <token>`
-
-## Testing
-
-Run tests:
-```bash
-npm test
-```
-
-Run tests with coverage:
-```bash
-npm run test:coverage
-```
-
-## Linting
-
-Run linter:
-```bash
-npm run lint
-```
-
-Fix linting issues:
-```bash
-npm run lint:fix
+```http
+DELETE /api/admin/users/:id
+Authorization: Bearer <jwt_token>
 ```
 
 ## Security Features
 
-- Password hashing using bcrypt
-- JWT-based authentication
-- Role-based access control
-- Account locking after failed login attempts
+### Password Security
+- Passwords are hashed using bcrypt
+- Minimum password length requirement
+- Password complexity requirements
 - Secure password reset flow
-- Email verification
-- Helmet for security headers
-- CORS enabled
-- Input validation
-- Error handling
 
-## Logging
+### Authentication
+- JWT-based authentication
+- Token expiration
+- Refresh token mechanism
+- Rate limiting on authentication endpoints
 
-The service uses Winston for logging with the following features:
-- Console logging in development
-- File logging in production
-- Log rotation
-- Different log levels
-- Structured JSON logging
+### Email Verification
+- Secure verification tokens
+- Token expiration
+- Resend verification email option
+- Masked user data until verification
+
+### Account Protection
+- Account locking after failed attempts
+- Session management
+- IP-based rate limiting
+- Secure headers
+
+## Data Models
+
+### User Schema
+```javascript
+{
+    firstName: String,
+    lastName: String,
+    email: String,
+    password: String,
+    role: String,
+    isEmailVerified: Boolean,
+    isPendingVerification: Boolean,
+    maskedEmail: String,
+    maskedFirstName: String,
+    maskedLastName: String,
+    verificationToken: String,
+    verificationTokenExpires: Date,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
+    failedLoginAttempts: Number,
+    isLocked: Boolean,
+    lockUntil: Date,
+    createdAt: Date,
+    updatedAt: Date
+}
+```
 
 ## Error Handling
 
-The service includes comprehensive error handling:
-- Validation errors
-- Authentication errors
-- Authorization errors
-- Database errors
-- Unhandled promise rejections
-- Custom error responses
+The service implements comprehensive error handling:
+
+- Validation errors (400)
+- Authentication errors (401)
+- Authorization errors (403)
+- Not found errors (404)
+- Rate limit errors (429)
+- Server errors (500)
+
+## Logging
+
+The service uses Winston for logging with the following levels:
+- Error: Critical errors
+- Warn: Warning messages
+- Info: General information
+- Debug: Detailed debugging information
+
+Logs are stored in the `logs` directory with separate files for:
+- User service logs
+- Error logs
+- Combined logs
+
+## Testing
+
+Run the test suite:
+```bash
+npm test
+```
+
+## Deployment
+
+1. Set up environment variables
+2. Configure MongoDB connection
+3. Set up email service
+4. Configure rate limiting
+5. Set up monitoring
+6. Deploy to production server
+
+## Best Practices
+
+- Input validation
+- Error handling
+- Security headers
+- Rate limiting
+- Logging
+- Monitoring
+- Code organization
+- Documentation
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch
+2. Create a feature branch
 3. Commit your changes
 4. Push to the branch
-5. Create a new Pull Request
+5. Create a Pull Request
+
+## Support
+
+For support, please contact the development team or create an issue in the repository.
