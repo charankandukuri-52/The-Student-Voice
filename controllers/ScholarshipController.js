@@ -1,4 +1,6 @@
 const { ScholarshipModel } = require('../models/ScholarshipModel');
+const scholarshipService = require('../services/scholarshipService');
+const logger = require('../config/logger');
 
 class ScholarshipController {
     // Get all scholarships
@@ -40,66 +42,52 @@ class ScholarshipController {
     }
 
     // Create new scholarship
-    static async createScholarship(req, res) {
+    async createScholarship(req, res) {
         try {
-            const scholarship = new ScholarshipModel(req.body);
-            await scholarship.save();
+            const scholarship = await scholarshipService.createScholarship(req.body);
             res.status(201).json({
                 success: true,
                 data: scholarship
             });
         } catch (error) {
-            res.status(500).json({
+            logger.error('Error in createScholarship controller:', error);
+            res.status(400).json({
                 success: false,
-                error: "Failed to create scholarship"
+                error: error.message
             });
         }
     }
 
     // Update scholarship
-    static async updateScholarship(req, res) {
+    async updateScholarship(req, res) {
         try {
-            const scholarship = await ScholarshipModel.findOneAndUpdate(
-                { id: req.params.id },
-                req.body,
-                { new: true }
+            const scholarship = await scholarshipService.updateScholarship(
+                req.params.id,
+                req.body
             );
-            if (!scholarship) {
-                return res.status(404).json({
-                    success: false,
-                    error: "Scholarship not found"
-                });
-            }
-            res.json({
+            res.status(200).json({
                 success: true,
                 data: scholarship
             });
         } catch (error) {
-            res.status(500).json({
+            logger.error('Error in updateScholarship controller:', error);
+            res.status(400).json({
                 success: false,
-                error: "Failed to update scholarship"
+                error: error.message
             });
         }
     }
 
     // Delete scholarship
-    static async deleteScholarship(req, res) {
+    async deleteScholarship(req, res) {
         try {
-            const scholarship = await ScholarshipModel.findOneAndDelete({ id: req.params.id });
-            if (!scholarship) {
-                return res.status(404).json({
-                    success: false,
-                    error: "Scholarship not found"
-                });
-            }
-            res.json({
-                success: true,
-                message: "Scholarship deleted successfully"
-            });
+            await scholarshipService.deleteScholarship(req.params.id);
+            res.status(204).send();
         } catch (error) {
-            res.status(500).json({
+            logger.error('Error in deleteScholarship controller:', error);
+            res.status(404).json({
                 success: false,
-                error: "Failed to delete scholarship"
+                error: error.message
             });
         }
     }
@@ -158,28 +146,62 @@ class ScholarshipController {
     }
 
     // Search scholarships
-    static async searchScholarships(req, res) {
+    async searchScholarships(req, res) {
         try {
-            const { query } = req.query;
-            const scholarships = await ScholarshipModel.find({
-                $or: [
-                    { name: { $regex: query, $options: 'i' } },
-                    { provider: { $regex: query, $options: 'i' } },
-                    { category: { $regex: query, $options: 'i' } },
-                    { tags: { $in: [new RegExp(query, 'i')] } }
-                ]
-            });
-            res.json({
+            const { page = 1, limit = 10, ...criteria } = req.query;
+            const result = await scholarshipService.searchScholarships(
+                criteria,
+                parseInt(page),
+                parseInt(limit)
+            );
+            res.status(200).json({
                 success: true,
-                data: scholarships
+                data: result
             });
         } catch (error) {
-            res.status(500).json({
+            logger.error('Error in searchScholarships controller:', error);
+            res.status(400).json({
                 success: false,
-                error: "Failed to search scholarships"
+                error: error.message
+            });
+        }
+    }
+
+    async getActiveScholarships(req, res) {
+        try {
+            const { page = 1, limit = 10 } = req.query;
+            const result = await scholarshipService.getActiveScholarships(
+                parseInt(page),
+                parseInt(limit)
+            );
+            res.status(200).json({
+                success: true,
+                data: result
+            });
+        } catch (error) {
+            logger.error('Error in getActiveScholarships controller:', error);
+            res.status(400).json({
+                success: false,
+                error: error.message
+            });
+        }
+    }
+
+    async incrementPopularity(req, res) {
+        try {
+            const scholarship = await scholarshipService.incrementPopularity(req.params.id);
+            res.status(200).json({
+                success: true,
+                data: scholarship
+            });
+        } catch (error) {
+            logger.error('Error in incrementPopularity controller:', error);
+            res.status(404).json({
+                success: false,
+                error: error.message
             });
         }
     }
 }
 
-module.exports = ScholarshipController;
+module.exports = new ScholarshipController();

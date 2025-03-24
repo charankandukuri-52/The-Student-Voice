@@ -1,32 +1,32 @@
 const express = require('express');
 const router = express.Router();
-const ScholarshipController = require('../controllers/ScholarshipController');
+const scholarshipController = require('../controllers/scholarshipController');
+const { authenticateToken } = require('../middleware/auth');
+const { validateScholarship } = require('../middleware/validation');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
-// Get all scholarships
-router.get('/', ScholarshipController.getAllScholarships);
+// Security middleware
+router.use(helmet());
 
-// Search scholarships
-router.get('/search', ScholarshipController.searchScholarships);
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
+router.use(limiter);
 
-// Get scholarships by type (government/private/international)
-router.get('/type/:type', ScholarshipController.getScholarshipsByType);
+// Public routes
+router.get('/search', scholarshipController.searchScholarships);
+router.get('/active', scholarshipController.getActiveScholarships);
+router.get('/:id', scholarshipController.getScholarship);
 
-// Get scholarships by category
-router.get('/category/:category', ScholarshipController.getScholarshipsByCategory);
+// Protected routes (require authentication)
+router.use(authenticateToken);
 
-// Get scholarships by degree
-router.get('/degree/:degree', ScholarshipController.getScholarshipsByDegree);
-
-// Get scholarship by ID (this should be last among GET routes to avoid conflicts)
-router.get('/:id', ScholarshipController.getScholarshipById);
-
-// Create new scholarship
-router.post('/', ScholarshipController.createScholarship);
-
-// Update scholarship
-router.put('/:id', ScholarshipController.updateScholarship);
-
-// Delete scholarship
-router.delete('/:id', ScholarshipController.deleteScholarship);
+router.post('/', validateScholarship, scholarshipController.createScholarship);
+router.put('/:id', validateScholarship, scholarshipController.updateScholarship);
+router.delete('/:id', scholarshipController.deleteScholarship);
+router.post('/:id/increment-popularity', scholarshipController.incrementPopularity);
 
 module.exports = router; 
