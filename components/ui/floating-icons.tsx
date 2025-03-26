@@ -14,10 +14,10 @@ const icons = [
 ];
 
 const positions = [
-  { top: "20%", left: "10%", z: 1 },  // Top-left
-  { top: "20%", right: "10%", z: 1 }, // Top-right
-  { bottom: "20%", left: "10%", z: 1 }, // Bottom-left
-  { bottom: "20%", right: "10%", z: 1 }, // Bottom-right
+  { top: "5%", left: "5%", z: 1 },      // Top-left
+  { top: "5%", right: "5%", z: 1 },     // Top-right
+  { bottom: "5%", left: "5%", z: 1 },   // Bottom-left
+  { bottom: "5%", right: "5%", z: 1 },  // Bottom-right
 ];
 
 export function FloatingIcons() {
@@ -26,7 +26,7 @@ export function FloatingIcons() {
       {icons.map(({ Icon, color }, index) => (
         <motion.div
           key={index}
-          className="absolute"
+          className="absolute md:scale-100 scale-75"
           style={{
             ...positions[index],
             transform: `translateZ(${positions[index].z * 20}px) scale(${1 + positions[index].z * 0.1})`,
@@ -45,7 +45,7 @@ export function FloatingIcons() {
           }}
         >
           <Icon 
-            className="w-12 h-12" 
+            className="w-8 h-8 md:w-12 md:h-12" 
             style={{
               color: color,
               filter: `
