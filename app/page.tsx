@@ -28,6 +28,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { GridBackground } from "@/components/ui/grid-background";
+import { FloatingIcons } from "@/components/ui/floating-icons";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -205,245 +207,249 @@ const TEAM_MEMBERS: TeamMember[] = [
 
 export default function Home() {
   return (
-    <motion.div 
-      initial="initial"
-      animate="animate"
-      variants={staggerContainer}
-      className="flex flex-col items-center justify-center w-full"
-    >
-      {/* Hero Section */}
-      <section className="w-full relative overflow-hidden bg-background">
-        <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
-        <div className="container mx-auto px-4 md:px-8 lg:px-12">
-          <motion.div 
-            variants={fadeInUp} 
-            className="max-w-3xl mx-auto text-center py-24 md:py-32"
-          >
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl lg:text-6xl mb-6">
-              The Student Voice
-            </h1>
-            <p className="text-muted-foreground sm:text-xl leading-relaxed mb-8">
-              Your college journey is unique and transformative. We're here to help you navigate academic challenges,
-              manage stress, and build meaningful connections while pursuing your educational goals.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Button size="lg" className="min-w-[140px]" asChild>
-                <Link href="/resources">Get Started</Link>
-              </Button>
-              <Button size="lg" variant="outline" className="min-w-[140px]" asChild>
-                <Link href="/support">Get Support</Link>
-              </Button>
-            </div>
-            <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto">
-              <div className="flex flex-col items-center">
-                <Users className="h-6 w-6 text-primary mb-2" />
-                <span className="text-2xl font-bold">10K+</span>
-                <span className="text-sm text-muted-foreground">Active Students</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <Award className="h-6 w-6 text-primary mb-2" />
-                <span className="text-2xl font-bold">95%</span>
-                <span className="text-sm text-muted-foreground">Success Rate</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <BookOpen className="h-6 w-6 text-primary mb-2" />
-                <span className="text-2xl font-bold">500+</span>
-                <span className="text-sm text-muted-foreground">Resources</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <Clock className="h-6 w-6 text-primary mb-2" />
-                <span className="text-2xl font-bold">24/7</span>
-                <span className="text-sm text-muted-foreground">Support</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+    <div className="flex flex-col min-h-screen">
+      <GridBackground>
         <motion.div 
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          initial="initial"
+          animate="animate"
+          variants={staggerContainer}
+          className="flex flex-col items-center justify-center w-full"
         >
-          <ArrowDown className="h-6 w-6 text-primary" />
-        </motion.div>
-      </section>
+          {/* Hero Section */}
+          <section className="w-full relative overflow-hidden">
+            <FloatingIcons />
+            <div className="container mx-auto px-4 md:px-8 lg:px-12">
+              <motion.div 
+                variants={fadeInUp} 
+                className="max-w-3xl mx-auto text-center py-24 md:py-32"
+              >
+                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl lg:text-6xl mb-6">
+                  The Student Voice
+                </h1>
+                <p className="text-muted-foreground sm:text-xl leading-relaxed mb-8">
+                  Your college journey is unique and transformative. We're here to help you navigate academic challenges,
+                  manage stress, and build meaningful connections while pursuing your educational goals.
+                </p>
+                <div className="flex flex-wrap gap-4 justify-center">
+                  <Button size="lg" className="min-w-[140px]" asChild>
+                    <Link href="/resources">Get Started</Link>
+                  </Button>
+                  <Button size="lg" variant="outline" className="min-w-[140px]" asChild>
+                    <Link href="/support">Get Support</Link>
+                  </Button>
+                </div>
+                <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                  <div className="flex flex-col items-center">
+                    <Users className="h-6 w-6 text-primary mb-2" />
+                    <span className="text-2xl font-bold">10K+</span>
+                    <span className="text-sm text-muted-foreground">Active Students</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Award className="h-6 w-6 text-primary mb-2" />
+                    <span className="text-2xl font-bold">95%</span>
+                    <span className="text-sm text-muted-foreground">Success Rate</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <BookOpen className="h-6 w-6 text-primary mb-2" />
+                    <span className="text-2xl font-bold">500+</span>
+                    <span className="text-sm text-muted-foreground">Resources</span>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Clock className="h-6 w-6 text-primary mb-2" />
+                    <span className="text-2xl font-bold">24/7</span>
+                    <span className="text-sm text-muted-foreground">Support</span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+            <motion.div 
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+              className="absolute bottom-8 left-1/2 -translate-x-1/2"
+            >
+              <ArrowDown className="h-6 w-6 text-primary" />
+            </motion.div>
+          </section>
 
-      {/* Support Cards Section */}
-      <section className="w-full py-16 bg-background">
-        <div className="container mx-auto px-4 md:px-8 lg:px-12">
-          <motion.div 
-            variants={fadeInUp}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl font-bold tracking-tighter mb-4">How We Support You</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Comprehensive support services designed to help you succeed in your academic journey.
-            </p>
-          </motion.div>
-          <Suspense fallback={<Loading />}>
+          {/* Support Cards Section */}
+          <section className="w-full py-16">
+            <div className="container mx-auto px-4 md:px-8 lg:px-12">
+              <motion.div 
+                variants={fadeInUp}
+                className="text-center mb-16"
+              >
+                <h2 className="text-3xl font-bold tracking-tighter mb-4">How We Support You</h2>
+                <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                  Comprehensive support services designed to help you succeed in your academic journey.
+                </p>
+              </motion.div>
+              <Suspense fallback={<Loading />}>
+                <motion.div 
+                  variants={fadeInUp}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto place-items-center"
+                >
+                  {SUPPORT_CARDS.map((card, index) => (
+                    <Link href={card.href} key={index} className="group w-full max-w-sm">
+                      <Card className="h-full transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary/20">
+                        <CardHeader>
+                          <div className="flex items-center gap-4">
+                            <div className="p-2 rounded-lg bg-primary/10">
+                              <card.icon className="h-6 w-6 text-primary" />
+                            </div>
+                            <div>
+                              <CardTitle>{card.title}</CardTitle>
+                              <CardDescription>{card.description}</CardDescription>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-muted-foreground mb-4">{card.content}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-primary">{card.stats}</span>
+                            <ArrowDown className="h-4 w-4 text-muted-foreground group-hover:translate-y-1 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  ))}
+                </motion.div>
+              </Suspense>
+              <motion.div 
+                variants={fadeInUp}
+                className="text-center mt-16"
+              >
+                <Button variant="outline" size="lg" asChild>
+                  <Link href="/support">View All Support Services</Link>
+                </Button>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* Meet the Team Section */}
+          <section className="w-full">
             <motion.div 
               variants={fadeInUp}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto place-items-center"
+              className="max-w-7xl mx-auto px-4 py-16 md:py-24"
             >
-              {SUPPORT_CARDS.map((card, index) => (
-                <Link href={card.href} key={index} className="group w-full max-w-sm">
-                  <Card className="h-full transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary/20">
-                    <CardHeader>
-                      <div className="flex items-center gap-4">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <card.icon className="h-6 w-6 text-primary" />
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold tracking-tighter mb-4">Meet Our Team</h2>
+                <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                  Our dedicated team of professionals is committed to supporting your educational journey
+                  and personal growth.
+                </p>
+              </div>
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-2 md:-ml-4">
+                  {TEAM_MEMBERS.map((member, index) => (
+                    <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
+                      <motion.div
+                        variants={fadeInUp}
+                        className="text-center p-4"
+                      >
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="relative w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden bg-background cursor-pointer group">
+                              <img
+                                src={member.image}
+                                alt={member.name}
+                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                              />
+                              <div className="absolute inset-0 bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span className="font-medium">View Profile</span>
+                              </div>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>{member.name}</DialogTitle>
+                            </DialogHeader>
+                            <div className="mt-4 space-y-4">
+                              <p className="text-primary font-medium">{member.role}</p>
+                              <p className="text-muted-foreground">{member.fullBio}</p>
+                              <div className="flex gap-4 justify-center">
+                                <a href={member.social.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+                                  <Twitter className="h-5 w-5" />
+                                </a>
+                                <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+                                  <Linkedin className="h-5 w-5" />
+                                </a>
+                                <a href={`mailto:${member.social.email}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                                  <Mail className="h-5 w-5" />
+                                </a>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                        <h3 className="text-xl font-semibold mb-2">{member.name}</h3>
+                        <p className="text-primary font-medium mb-2">{member.role}</p>
+                        <p className="text-sm text-muted-foreground">{member.bio}</p>
+                        <div className="flex gap-4 justify-center mt-4">
+                          <a href={member.social.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+                            <Twitter className="h-4 w-4" />
+                          </a>
+                          <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+                            <Linkedin className="h-4 w-4" />
+                          </a>
+                          <a href={`mailto:${member.social.email}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                            <Mail className="h-4 w-4" />
+                          </a>
                         </div>
-                        <div>
-                          <CardTitle>{card.title}</CardTitle>
-                          <CardDescription>{card.description}</CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground mb-4">{card.content}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-primary">{card.stats}</span>
-                        <ArrowDown className="h-4 w-4 text-muted-foreground group-hover:translate-y-1 transition-transform" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+                      </motion.div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden md:flex" />
+                <CarouselNext className="hidden md:flex" />
+              </Carousel>
             </motion.div>
-          </Suspense>
-          <motion.div 
-            variants={fadeInUp}
-            className="text-center mt-16"
-          >
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/support">View All Support Services</Link>
-            </Button>
-          </motion.div>
-        </div>
-      </section>
+          </section>
 
-      {/* Meet the Team Section */}
-      <section className="w-full bg-background">
-        <motion.div 
-          variants={fadeInUp}
-          className="max-w-7xl mx-auto px-4 py-16 md:py-24"
-        >
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tighter mb-4">Meet Our Team</h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Our dedicated team of professionals is committed to supporting your educational journey
-              and personal growth.
-            </p>
-          </div>
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-2 md:-ml-4">
-              {TEAM_MEMBERS.map((member, index) => (
-                <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                  <motion.div
-                    variants={fadeInUp}
-                    className="text-center p-4"
-                  >
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <div className="relative w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden bg-background cursor-pointer group">
-                          <img
-                            src={member.image}
-                            alt={member.name}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="font-medium">View Profile</span>
-                          </div>
-                        </div>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>{member.name}</DialogTitle>
-                        </DialogHeader>
-                        <div className="mt-4 space-y-4">
-                          <p className="text-primary font-medium">{member.role}</p>
-                          <p className="text-muted-foreground">{member.fullBio}</p>
-                          <div className="flex gap-4 justify-center">
-                            <a href={member.social.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
-                              <Twitter className="h-5 w-5" />
-                            </a>
-                            <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
-                              <Linkedin className="h-5 w-5" />
-                            </a>
-                            <a href={`mailto:${member.social.email}`} className="text-muted-foreground hover:text-foreground transition-colors">
-                              <Mail className="h-5 w-5" />
-                            </a>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                    <h3 className="text-xl font-semibold mb-2">{member.name}</h3>
-                    <p className="text-primary font-medium mb-2">{member.role}</p>
-                    <p className="text-sm text-muted-foreground">{member.bio}</p>
-                    <div className="flex gap-4 justify-center mt-4">
-                      <a href={member.social.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
-                        <Twitter className="h-4 w-4" />
-                      </a>
-                      <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
-                        <Linkedin className="h-4 w-4" />
-                      </a>
-                      <a href={`mailto:${member.social.email}`} className="text-muted-foreground hover:text-foreground transition-colors">
-                        <Mail className="h-4 w-4" />
-                      </a>
+          {/* Our Mission Section */}
+          <section className="w-full">
+            <motion.div 
+              variants={fadeInUp}
+              className="max-w-7xl mx-auto px-4 py-16 md:py-24"
+            >
+              <div className="max-w-3xl mx-auto text-center">
+                <h2 className="text-3xl font-bold tracking-tighter mb-6">Our Mission</h2>
+                <p className="text-muted-foreground text-lg mb-8">
+                  At The Student Voice, we believe every student deserves a supportive environment to thrive academically and personally. Our platform is built on three core principles:
+                </p>
+                <div className="space-y-6 text-left">
+                  <motion.div variants={fadeInUp} className="flex items-start gap-4">
+                    <span className="flex-none w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">1</span>
+                    <div>
+                      <h3 className="font-semibold mb-2">Academic Excellence</h3>
+                      <p className="text-muted-foreground">Empowering students with resources and tools for academic success, ensuring every student has the support they need to excel.</p>
                     </div>
                   </motion.div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="hidden md:flex" />
-            <CarouselNext className="hidden md:flex" />
-          </Carousel>
+                  <motion.div variants={fadeInUp} className="flex items-start gap-4">
+                    <span className="flex-none w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">2</span>
+                    <div>
+                      <h3 className="font-semibold mb-2">Mental Well-being</h3>
+                      <p className="text-muted-foreground">Creating a supportive community that fosters mental well-being, providing resources and guidance for balanced student life.</p>
+                    </div>
+                  </motion.div>
+                  <motion.div variants={fadeInUp} className="flex items-start gap-4">
+                    <span className="flex-none w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">3</span>
+                    <div>
+                      <h3 className="font-semibold mb-2">Career Development</h3>
+                      <p className="text-muted-foreground">Providing personalized guidance for career development, helping students prepare for their future professional journey.</p>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </section>
         </motion.div>
-      </section>
-
-      {/* Our Mission Section */}
-      <section className="w-full">
-        <motion.div 
-          variants={fadeInUp}
-          className="max-w-7xl mx-auto px-4 py-16 md:py-24"
-        >
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold tracking-tighter mb-6">Our Mission</h2>
-            <p className="text-muted-foreground text-lg mb-8">
-              At The Student Voice, we believe every student deserves a supportive environment to thrive academically and personally. Our platform is built on three core principles:
-            </p>
-            <div className="space-y-6 text-left">
-              <motion.div variants={fadeInUp} className="flex items-start gap-4">
-                <span className="flex-none w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">1</span>
-                <div>
-                  <h3 className="font-semibold mb-2">Academic Excellence</h3>
-                  <p className="text-muted-foreground">Empowering students with resources and tools for academic success, ensuring every student has the support they need to excel.</p>
-                </div>
-              </motion.div>
-              <motion.div variants={fadeInUp} className="flex items-start gap-4">
-                <span className="flex-none w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">2</span>
-                <div>
-                  <h3 className="font-semibold mb-2">Mental Well-being</h3>
-                  <p className="text-muted-foreground">Creating a supportive community that fosters mental well-being, providing resources and guidance for balanced student life.</p>
-                </div>
-              </motion.div>
-              <motion.div variants={fadeInUp} className="flex items-start gap-4">
-                <span className="flex-none w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">3</span>
-                <div>
-                  <h3 className="font-semibold mb-2">Career Development</h3>
-                  <p className="text-muted-foreground">Providing personalized guidance for career development, helping students prepare for their future professional journey.</p>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-    </motion.div>
+      </GridBackground>
+    </div>
   );
 }
 const SUPPORT_CARDS = [
