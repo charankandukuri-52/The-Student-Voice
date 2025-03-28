@@ -1,63 +1,96 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, Brain, Users } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Brain, Heart, Users, BookOpen, Calendar, MessageSquare } from "lucide-react";
 import Link from "next/link";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const MENTAL_HEALTH_OPTIONS = [
+const MENTAL_HEALTH_SECTIONS = [
   {
-    title: "Counseling Services",
-    description: "Professional counseling and therapy support",
-    icon: Heart,
-    details: [
-      "Individual counseling sessions",
-      "Group therapy programs",
-      "Crisis intervention support",
-      "Academic stress management",
-    ],
-    cta: "View Counseling Services",
-    href: "/counseling",
-    gradient: "from-red-500/20 to-pink-500/20",
-    iconClass: "text-red-500",
-  },
-  {
-    title: "Mental Health Resources",
-    description: "Access to mental health tools and resources",
+    title: "Professional Counseling",
+    description: "Connect with licensed counselors and mental health professionals",
     icon: Brain,
-    details: [
-      "Self-help guides and materials",
-      "Mental health workshops",
-      "Online therapy resources",
-      "Stress management tools",
-    ],
-    cta: "Explore Resources",
-    href: "/mental-health/resources",
-    gradient: "from-blue-500/20 to-cyan-500/20",
+    link: "/counseling",
+    gradient: "from-blue-500/20 to-indigo-500/20",
     iconClass: "text-blue-500",
+    features: [
+      "One-on-one counseling sessions",
+      "Group therapy options",
+      "Crisis support",
+      "Specialized counseling",
+    ],
   },
   {
-    title: "Support Groups",
-    description: "Connect with peers in similar situations",
+    title: "Peer Support Groups",
+    description: "Join supportive communities and share experiences with peers",
     icon: Users,
-    details: [
-      "Peer support networks",
-      "Discussion forums",
-      "Community meetups",
-      "Shared experiences",
+    link: "/community/peer-support",
+    gradient: "from-green-500/20 to-emerald-500/20",
+    iconClass: "text-green-500",
+    features: [
+      "Student-led support groups",
+      "Topic-specific discussions",
+      "Anonymous sharing",
+      "Regular meetups",
     ],
-    cta: "Join Support Groups",
-    href: "/mental-health/support-groups",
+  },
+  {
+    title: "Self-Help Resources",
+    description: "Access guides, tools, and techniques for self-improvement",
+    icon: BookOpen,
+    link: "/mental-health/resources",
     gradient: "from-purple-500/20 to-pink-500/20",
     iconClass: "text-purple-500",
+    features: [
+      "Self-help guides",
+      "Meditation resources",
+      "Stress management tips",
+      "Wellness worksheets",
+    ],
+  },
+  {
+    title: "Wellness Events",
+    description: "Participate in workshops and activities for mental well-being",
+    icon: Calendar,
+    link: "/community/wellness",
+    gradient: "from-orange-500/20 to-amber-500/20",
+    iconClass: "text-orange-500",
+    features: [
+      "Mindfulness workshops",
+      "Yoga sessions",
+      "Art therapy",
+      "Wellness challenges",
+    ],
+  },
+  {
+    title: "Crisis Support",
+    description: "Immediate help and resources for mental health emergencies",
+    icon: Heart,
+    link: "/mental-health/crisis-support",
+    gradient: "from-red-500/20 to-rose-500/20",
+    iconClass: "text-red-500",
+    features: [
+      "24/7 helpline",
+      "Emergency contacts",
+      "Crisis resources",
+      "Safety planning",
+    ],
+  },
+  {
+    title: "Community Forums",
+    description: "Engage in discussions and share experiences with others",
+    icon: MessageSquare,
+    link: "/community/forums",
+    gradient: "from-cyan-500/20 to-teal-500/20",
+    iconClass: "text-cyan-500",
+    features: [
+      "Topic-based discussions",
+      "Anonymous posting",
+      "Moderated spaces",
+      "Resource sharing",
+    ],
   },
 ];
 
@@ -91,8 +124,8 @@ export default function MentalHealthSection() {
             Mental Health Support
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Your mental well-being is our priority. 
-            Explore our comprehensive range of mental health services and support programs designed to help you thrive.
+            Access comprehensive mental health resources, professional counseling,
+            peer support, and wellness activities to support your well-being.
           </p>
         </motion.div>
 
@@ -102,51 +135,46 @@ export default function MentalHealthSection() {
           animate="visible"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {MENTAL_HEALTH_OPTIONS.map((option, index) => (
+          {MENTAL_HEALTH_SECTIONS.map((section) => (
             <motion.div
-              key={option.title}
+              key={section.title}
               variants={fadeInUp}
               className="flex"
             >
-              <Card className="flex flex-col w-full hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-card border-muted">
-                <CardHeader className="flex-none">
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className={cn(
-                      "p-3 rounded-xl bg-gradient-to-br",
-                      option.gradient
-                    )}>
-                      <option.icon className={cn(
-                        "w-6 h-6",
-                        option.iconClass
-                      )} />
+              <Link href={section.link} className="w-full">
+                <Card className="h-full hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-card border-muted">
+                  <CardHeader>
+                    <div className="flex items-center gap-4 mb-2">
+                      <div className={cn(
+                        "p-3 rounded-xl bg-gradient-to-br",
+                        section.gradient
+                      )}>
+                        <section.icon className={cn("w-6 h-6", section.iconClass)} />
+                      </div>
+                      <div className="flex-1">
+                        <CardTitle className="text-xl font-semibold">{section.title}</CardTitle>
+                        <CardDescription className="text-base">{section.description}</CardDescription>
+                      </div>
                     </div>
-                    <CardTitle className="text-xl font-semibold">{option.title}</CardTitle>
-                  </div>
-                  <CardDescription className="text-base">{option.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col flex-grow justify-between">
-                  <ul className="space-y-3 mb-6">
-                    {option.details.map((detail, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className={cn(
-                          "mt-1.5 h-1.5 w-1.5 rounded-full flex-shrink-0",
-                          option.iconClass
-                        )} />
-                        <span className="text-sm text-muted-foreground">{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="pt-4">
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {section.features.map((feature, i) => (
+                        <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
                     <Button 
-                      asChild 
-                      className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
+                      className="w-full mt-6 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
                       size="lg"
                     >
-                      <Link href={option.href}>{option.cta}</Link>
+                      Explore {section.title}
                     </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
