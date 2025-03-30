@@ -13,10 +13,11 @@ graph TB
         end
 
         subgraph Features["Feature Modules"]
-            MH[Mental Health]
-            Career[Career]
-            Community[Community]
-            Counseling[Counseling]
+            FA[Financial Aid]
+            AS[Academic Support]
+            MR[Mental Resources]
+            CM[Community]
+            CG[Career Guidance]
         end
 
         subgraph Shared["Shared Resources"]
@@ -38,6 +39,8 @@ graph TB
         Email[Email Service]
         Storage[File Storage]
         Analytics[Analytics]
+        Payment[Payment Gateway]
+        Calendar[Calendar Integration]
     end
 
     Frontend --> Backend
@@ -50,10 +53,11 @@ graph TB
 graph TB
     subgraph Pages["Page Components"]
         Home[Home Page]
-        MH[Mental Health Pages]
-        Career[Career Pages]
-        Community[Community Pages]
-        Counseling[Counseling Pages]
+        FA[Financial Aid Pages]
+        AS[Academic Support Pages]
+        MR[Mental Resources Pages]
+        CM[Community Pages]
+        CG[Career Guidance Pages]
     end
 
     subgraph Components["Reusable Components"]
@@ -61,18 +65,66 @@ graph TB
         Layout[Layout Components]
         Forms[Form Components]
         Cards[Card Components]
+        Tables[Table Components]
+        Charts[Chart Components]
     end
 
     subgraph Features["Feature Components"]
-        MHComponents[Mental Health Components]
-        CareerComponents[Career Components]
-        CommunityComponents[Community Components]
-        CounselingComponents[Counseling Components]
+        FAComponents[Financial Aid Components]
+        ASComponents[Academic Support Components]
+        MRComponents[Mental Resources Components]
+        CMComponents[Community Components]
+        CGComponents[Career Guidance Components]
     end
 
     Pages --> Components
     Pages --> Features
     Features --> Components
+```
+
+## Module-Specific Architecture
+
+```mermaid
+graph TB
+    subgraph FinancialAid["Financial Aid Module"]
+        Scholarships[Scholarships]
+        Grants[Grants]
+        Loans[Student Loans]
+        Budget[Budget Planning]
+        FAFSA[FAFSA Assistance]
+    end
+
+    subgraph AcademicSupport["Academic Support Module"]
+        Tutoring[Tutoring Services]
+        StudyGroups[Study Groups]
+        Resources[Learning Resources]
+        Planning[Academic Planning]
+        Progress[Progress Tracking]
+    end
+
+    subgraph MentalResources["Mental Resources Module"]
+        Counseling[Counseling Services]
+        Crisis[Crisis Support]
+        Wellness[Wellness Resources]
+        Support[Peer Support]
+        SelfHelp[Self-Help Tools]
+    end
+
+    subgraph Community["Community Module"]
+        Events[Events & Activities]
+        Forums[Discussion Forums]
+        Clubs[Student Clubs]
+        Mentorship[Mentorship Programs]
+        Networking[Networking]
+    end
+
+    subgraph CareerGuidance["Career Guidance Module"]
+        Jobs[Job Listings]
+        Internships[Internships]
+        Career[Career Planning]
+        Skills[Skill Development]
+        Resume[Resume Builder]
+    end
 ```
 
 ## Data Flow Architecture
@@ -110,6 +162,9 @@ graph LR
 - **Forms**: React Hook Form
 - **Validation**: Zod
 - **Icons**: Lucide React
+- **Charts**: Recharts
+- **Tables**: TanStack Table
+- **Calendar**: FullCalendar
 
 ### Backend
 - **API**: Next.js API Routes
@@ -119,6 +174,8 @@ graph LR
 - **File Storage**: AWS S3
 - **Email Service**: SendGrid
 - **Analytics**: Google Analytics
+- **Payment Processing**: Stripe
+- **Calendar Integration**: Google Calendar API
 
 ### Development Tools
 - **Version Control**: Git
@@ -130,61 +187,45 @@ graph LR
 
 ## Key Features and Considerations
 
-### 1. User Experience (UX)
-- Responsive design with mobile-first approach
-- Consistent theming and styling
-- Accessibility compliance (WCAG 2.1)
-- Interactive components with smooth animations
-- Progressive loading and skeleton states
+### 1. Financial Aid Module
+- Scholarship and grant management
+- Student loan information and applications
+- Budget planning tools
+- FAFSA assistance and guidance
+- Financial literacy resources
+- Payment processing integration
 
-### 2. Performance
-- Image optimization with Next.js Image
-- Code splitting and lazy loading
-- Static and dynamic rendering strategies
-- Resource caching and optimization
-- Performance monitoring with Core Web Vitals
+### 2. Academic Support Module
+- Tutoring service scheduling
+- Study group management
+- Learning resource library
+- Academic planning tools
+- Progress tracking and analytics
+- Calendar integration
 
-### 3. Security
-- JWT-based authentication
-- CSRF protection
-- XSS prevention
-- Secure data transmission (HTTPS)
-- Input validation and sanitization
+### 3. Mental Resources Module
+- Counseling service booking
+- Crisis support resources
+- Wellness tracking
+- Peer support forums
+- Self-help tools and guides
+- Emergency contact management
 
-### 4. State Management
-- Local state with React hooks
-- Global state with Context API
-- Server state with React Query
-- Form state with React Hook Form
-- Cache management with SWR
+### 4. Community Module
+- Event management and registration
+- Discussion forums and chat
+- Student club management
+- Mentorship program matching
+- Networking features
+- Community guidelines
 
-### 5. Testing Strategy
-- Unit tests for components
-- Integration tests for features
-- E2E tests for critical flows
-- Accessibility testing
-- Performance testing
-
-### 6. Deployment Strategy
-- Continuous deployment with GitHub Actions
-- Staging and production environments
-- Automated testing and validation
-- Rollback capabilities
-- Monitoring and logging
-
-### 7. SEO Optimization
-- Meta tags and descriptions
-- Semantic HTML structure
-- Sitemap generation
-- Robots.txt configuration
-- Open Graph tags
-
-### 8. Internationalization
-- Multi-language support
-- RTL layout support
-- Date and number formatting
-- Currency handling
-- Translation management
+### 5. Career Guidance Module
+- Job and internship listings
+- Career assessment tools
+- Skill development tracking
+- Resume builder
+- Interview preparation
+- Professional networking
 
 ## Directory Structure
 
@@ -192,17 +233,19 @@ graph LR
 ├── app/                    # Next.js 14 app directory
 │   ├── (auth)/            # Authentication routes
 │   ├── (dashboard)/       # Protected dashboard routes
-│   ├── mental-health/     # Mental health module
-│   ├── career/           # Career module
+│   ├── financial-aid/     # Financial aid module
+│   ├── academic/         # Academic support module
+│   ├── mental-health/    # Mental resources module
 │   ├── community/        # Community module
-│   ├── counseling/       # Counseling module
-│   └── api/              # API routes
+│   ├── career/          # Career guidance module
+│   └── api/             # API routes
 ├── components/           # Reusable components
 │   ├── ui/              # UI components
-│   ├── mental-health/   # Mental health components
-│   ├── career/         # Career components
+│   ├── financial-aid/   # Financial aid components
+│   ├── academic/       # Academic support components
+│   ├── mental-health/  # Mental resources components
 │   ├── community/      # Community components
-│   └── counseling/     # Counseling components
+│   └── career/         # Career guidance components
 ├── lib/                 # Utilities and helpers
 ├── hooks/              # Custom React hooks
 ├── types/              # TypeScript types
@@ -226,6 +269,8 @@ graph TD
     UI --> Forms[Form Components]
     UI --> Cards[Card Components]
     UI --> Layout[Layout Components]
+    UI --> Tables[Table Components]
+    UI --> Charts[Chart Components]
 ```
 
 ## State Management Flow
