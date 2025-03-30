@@ -88,7 +88,6 @@ graph TB
 graph TB
     subgraph FinancialAid["Financial Aid Module"]
         Scholarships[Scholarships]
-        Grants[Grants]
         Loans[Student Loans]
        onCampusWork[On Campus Work]
     end
