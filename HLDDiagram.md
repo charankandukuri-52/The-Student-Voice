@@ -90,7 +90,7 @@ graph TB
         Scholarships[Scholarships]
         Grants[Grants]
         Loans[Student Loans]
-       onCampusWork [On Campus Work]
+       onCampusWork[On Campus Work]
     end
 
     subgraph AcademicSupport["Academic Support Module"]
