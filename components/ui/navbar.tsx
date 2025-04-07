@@ -13,6 +13,18 @@ import {
 } from "@/components/ui/sheet";
 import { IconMenu2 } from "@tabler/icons-react";
 import { ThemeToggle } from "../theme-toggle";
+import { 
+  UserButton, 
+  SignInButton, 
+  SignUpButton, 
+  useUser,
+  SignIn,
+  SignUp,
+  ClerkLoading,
+  ClerkLoaded,
+  SignedIn,
+  SignedOut
+} from "@clerk/nextjs";
 
 const navigationItems = [
   {
@@ -44,6 +56,7 @@ const navigationItems = [
 
 export function Navbar() {
   const [mounted, setMounted] = React.useState(false);
+  const { isSignedIn } = useUser();
 
   React.useEffect(() => {
     setMounted(true);
@@ -63,10 +76,10 @@ export function Navbar() {
           className="flex items-center space-x-2"
           aria-label="Return to homepage"
         >
-          <span className="font-bold lg:px-12 px-4"> The Student Voice</span>
+          <span className="font-bold lg:px-12 px-4">The Student Voice</span>
         </Link>
 
-        {/* Desktop Navigation (only visible on screens larger than 1024px) */}
+        {/* Desktop Navigation */}
         <div className="hidden lg:flex lg:items-center lg:gap-[30px] lg:ml-8">
           {navigationItems.map((item) => (
             <Link
@@ -82,17 +95,33 @@ export function Navbar() {
 
         <div className="flex items-center gap-[30px]">
           <ThemeToggle />
-          <Button 
-            asChild 
-            variant="outline"
-            size="sm"
-            className="hidden sm:inline-flex"
-            aria-label="Sign in to your account"
-          >
-            <Link href="/login">Login</Link>
-          </Button>
+          
+          <ClerkLoading>
+            <div className="h-8 w-8 animate-pulse rounded-full bg-muted" />
+          </ClerkLoading>
+          
+          <ClerkLoaded>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+            
+            <SignedOut>
+              <div className="flex items-center gap-2">
+                <SignInButton mode="modal">
+                  <Button variant="outline" size="sm" className="hidden sm:inline-flex">
+                    Sign in
+                  </Button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <Button size="sm" className="hidden sm:inline-flex">
+                    Sign up
+                  </Button>
+                </SignUpButton>
+              </div>
+            </SignedOut>
+          </ClerkLoaded>
 
-          {/* Sheet for screens below 1024px */}
+          {/* Mobile Menu */}
           <Sheet>
             <SheetTrigger asChild>
               <Button
@@ -121,14 +150,25 @@ export function Navbar() {
                   </Link>
                 ))}
                 <hr className="my-2 border-t border-border" />
-                <Button 
-                  asChild 
-                  variant="outline"
-                  className="sm:hidden w-full"
-                  aria-label="Sign in to your account"
-                >
-                  <Link href="/login">Login</Link>
-                </Button>
+                <ClerkLoaded>
+                  <SignedIn>
+                    <UserButton afterSignOutUrl="/" />
+                  </SignedIn>
+                  <SignedOut>
+                    <div className="flex flex-col gap-2">
+                      <SignInButton mode="modal">
+                        <Button variant="outline" className="w-full">
+                          Sign in
+                        </Button>
+                      </SignInButton>
+                      <SignUpButton mode="modal">
+                        <Button className="w-full">
+                          Sign up
+                        </Button>
+                      </SignUpButton>
+                    </div>
+                  </SignedOut>
+                </ClerkLoaded>
               </div>
             </SheetContent>
           </Sheet>

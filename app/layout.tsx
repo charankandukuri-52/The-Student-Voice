@@ -6,6 +6,7 @@ import { Navbar } from "@/components/ui/navbar";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { Footer } from "@/components/ui/footer";
 import { AutoRefresh } from "@/components/auto-refresh";
+import { ClerkProvider } from '@clerk/nextjs';
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -31,25 +32,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AutoRefresh />
-          <div className="relative flex min-h-screen flex-col">
-            <ProgressBar />
-            <Navbar />
-            <main className="flex-1 w-full">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body className={inter.className}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AutoRefresh />
+            <div className="relative flex min-h-screen flex-col">
+              <ProgressBar />
+              <Navbar />
+              <main className="flex-1 w-full">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
