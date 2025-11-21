@@ -1,4 +1,3 @@
-"use client"
 import { CareerGuidanceSection } from "@/components/career/CareerGuidanceSection";
 
 export const metadata = {
